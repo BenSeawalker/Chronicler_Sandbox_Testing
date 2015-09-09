@@ -35,11 +35,11 @@ if(num_lines > 0)
     
     
     // set the cursor location in the string
-    _tbox.cursor[LOC] = _tbox.cursor[POS];
+    _tbox.cursor[LOC] = _tbox.cursor[POS] + _tbox.added_lines;
     for(var i = 0; i < _tbox.cursor[LINE]; i++)
         _tbox.cursor[LOC] += string_length(lines[|i]);
         
-    _tbox.cursor[LOC] += string_count( chr(10), string_copy( _tbox.text, 1, _tbox.cursor[LOC] + num_lines + 1 ) );// + num_lines + 1) );
+    //_tbox.cursor[LOC] += string_count( chr(10), string_copy( _tbox.text, 1, _tbox.cursor[LOC] ) );// + num_lines + 1) );
 }
 else
 {

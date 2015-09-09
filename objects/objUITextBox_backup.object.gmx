@@ -160,7 +160,7 @@ display_text = text; // what is displayed in the box
             <kind>1</kind>
             <string>///LEFT CLICKED
 
-calculate_cursor_loc( mouse_x, mouse_y, id );
+//calculate_cursor_loc( mouse_x, mouse_y, id );
 </string>
           </argument>
         </arguments>

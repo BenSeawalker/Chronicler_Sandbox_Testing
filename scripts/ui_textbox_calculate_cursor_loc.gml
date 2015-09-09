@@ -1,4 +1,4 @@
-///calculate_cursor_loc( x, y, TextBox )
+///ui_textbox_calculate_cursor_loc( x, y, TextBox )
 
 var _x    = real(argument0),
     _y    = real(argument1),
@@ -37,7 +37,7 @@ else
 ///*
 _cursorPos = cp;              // move the cursor to the correct position in the line
 for(var i = 0; i < line; i++) // shift the cursor down until it's on the correct line
-    _cursorPos += string_length(lines[|i]); 
+    _cursorPos += string_length(lines[|i]) + 1; 
 
 // account for user typed newline chars
 //_cursorPos += string_count( chr(10), string_copy( _tbox.text, 1, _cursorPos ) );

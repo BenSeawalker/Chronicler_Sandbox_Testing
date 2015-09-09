@@ -26,11 +26,13 @@
           <argument>
             <kind>1</kind>
             <string>///LOCAL VARIABLES
+
+
 ///////////////////////////////////////////////////////
 //  DIMENSIONS
 ////
 width = 100;
-height = 200;
+height = 100;
 prev_width = width;
 prev_height = height;
 
@@ -42,6 +44,7 @@ target_height = height;
 //  DRAWING
 ////
 new = true;
+draw_disabled = false;
 
 
 ///////////////////////////////////////////////////////
@@ -49,6 +52,12 @@ new = true;
 ////
 active = true;
 double_click = false;
+
+
+///////////////////////////////////////////////////////
+//  UI EVENTS
+////
+ui_event = -1;
 </string>
           </argument>
         </arguments>
@@ -185,6 +194,30 @@ height = lerp( height, target_height, 0.01 );
           <argument>
             <kind>1</kind>
             <string>ACTIVATED</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if(draw_disabled)
+    exit;
+</string>
           </argument>
         </arguments>
       </action>

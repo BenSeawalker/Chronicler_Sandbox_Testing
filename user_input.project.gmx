@@ -14,9 +14,19 @@
         <script>scripts\update_user_input.gml</script>
       </scripts>
       <scripts name="TextBox">
-        <script>scripts\calculate_cursor_loc.gml</script>
+        <script>scripts\ui_textbox_calculate_cursor_loc.gml</script>
+      </scripts>
+      <scripts name="Drawing">
+        <script>scripts\ui_draw_once.gml</script>
+      </scripts>
+      <scripts name="ScrollWindow">
+        <script>scripts\ui_scrollwindow_create.gml</script>
+        <script>scripts\ui_scrollwindow_add.gml</script>
+      </scripts>
+      <scripts name="Backups">
         <script>scripts\calculate_cursor.gml</script>
       </scripts>
+      <script>scripts\ui_event_activate.gml</script>
     </scripts>
     <scripts name="Utils">
       <scripts name="String">
@@ -42,9 +52,12 @@
       <object>objects\objUIManager</object>
       <object>objects\objUI</object>
       <objects name="Items">
+        <object>objects\objUIScrollWindow</object>
         <object>objects\objUITextBox</object>
-        <object>objects\objUITextBox_backup2</object>
+      </objects>
+      <objects name="Backups">
         <object>objects\objUITextBox_backup</object>
+        <object>objects\__</object>
       </objects>
     </objects>
     <object>objects\obj_order</object>

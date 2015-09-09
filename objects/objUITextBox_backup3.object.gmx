@@ -55,22 +55,14 @@ srf_text = surface_create( width, height );
 ///////////////////////////////////////////////////////
 //  CURSOR
 ////
-cursor[LINE] = 0;
-cursor[POS]  = 0;
-cursor[LOC]  = 0;
-
-prev_cursor[LINE] = cursor[LINE];
-prev_cursor[POS]  = cursor[POS];
-prev_cursor[LOC]  = cursor[LOC];
+cursor_pos = 0;
+prev_cursor_pos = cursor_pos;
 
 cursor_blink = 0;
 
 
-cursor_select_start[LINE] = 0;
-cursor_select_start[POS]  = 0;
-
-cursor_select_end[LINE] = 0;
-cursor_select_end[POS]  = 0;
+cursor_select_start = 0;
+cursor_select_end   = 0;
 
 
 ///////////////////////////////////////////////////////
@@ -79,8 +71,6 @@ cursor_select_end[POS]  = 0;
 
 text = ""; // the actual typed text
 prev_text = text; // the text as it was in the previous frame
-
-display_text = ds_list_create(); // what is displayed in the box
 </string>
           </argument>
         </arguments>
@@ -119,7 +109,7 @@ display_text = ds_list_create(); // what is displayed in the box
             <kind>1</kind>
             <string>if(objUIManager.selected_item == id)
 {
-    update_user_input(cursor[LOC]);
+    update_user_input(cursor_pos);
     text = user_input;
 }
 </string>
@@ -275,28 +265,16 @@ user_input = text;//string_collapse(text, chr(10));
         
         
         ///////////////////////////////////////////////////////////
-        //  TEXT WRAP
-        ////
-            ds_list_destroy(display_text);
-            if(objUIManager.text_wrap)
-                display_text = string_tokenize( string_wrap( text, width, true ), chr(10), false );
-            else
-                display_text = string_tokenize( text, chr(10), false );
-        
-        
-        ///////////////////////////////////////////////////////////
         //  TEXT
         ////
             if( text != prev_text || redraw)
             {
-                //cursor[POS] += ((string_length_full(display_text) - string_length_full(prev_text)) * !keyboard_check(vk_delete));
-                //ds_list_copy(prev_text, display_text);
-                
+                cursor_pos += ((string_length_full(text) - string_length_full(prev_text)) * !keyboard_check(vk_delete));
                 prev_text = text;
                 
                 surface_set_target( srf_text );
                     draw_clear_alpha( c_black, 0 );
-                    draw_text( 0, 0, display_text );
+                    draw_text( 0, 0, text );
                 surface_reset_target();
             }
          
@@ -309,26 +287,26 @@ user_input = text;//string_collapse(text, chr(10));
             ////
                 // separate text into lines
                 var lines = string_tokenize( display_text, chr(10), false );
-                //var num_lines = (ds_list_size(lines) - 1);
+                var num_lines = (ds_list_size(lines) - 1);
                 
-                calculate_cursor(id);
+                //calculate_cursor(id);
                     
                 // calculate the line the cursor is currently on
-                //var line = string_count( chr(10), string_copy( display_text, 1, cursor_pos ) );
-                var tline = string_count( chr(10), string_copy( text, 1, cursor[LOC]) );
+                var line = string_count( chr(10), string_copy( display_text, 1, cursor_pos ) );
+                var tline = string_count( chr(10), string_copy( text, 1, cursor_pos) );
                 
                 // calculate the position of the cursor in the current line
-                //cp_line = cursor_pos;
-                //for(var i = 0; i &lt; line; i++)
-                //    cp_line -= string_length(lines[|i]) + 1;
+                var cp_line = cursor_pos;
+                for(var i = 0; i &lt; line; i++)
+                    cp_line -= string_length(lines[|i]) + 1;
                 
                 // make sure the cursor is on the right line...
-                //var line_length = string_length(lines[|line]) + line;
-                //if(cp_line &gt; line_length)
-                //{
-                //    line = min( (line + 1), (ds_list_size(lines) - 1) );;
-                //    cp_line -= line_length;
-                //}
+                var line_length = string_length(lines[|line]) + line;
+                if(cp_line &gt; line_length)
+                {
+                    line = min( (line + 1), num_lines );;
+                    cp_line -= line_length;
+                }
                 
                 
             //////////////
