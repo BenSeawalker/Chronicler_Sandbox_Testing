@@ -429,12 +429,15 @@
     <option_xbone_title_id></option_xbone_title_id>
   </Options>
   <ConfigConstants>
-    <constants number="8">
+    <constants number="11">
       <constant name="UI_ACTIVATE">0</constant>
       <constant name="UI_DEACTIVATE">1</constant>
       <constant name="UI_LCLICK">2</constant>
       <constant name="UI_LHOLD">3</constant>
       <constant name="UI_LRELEASE">4</constant>
+      <constant name="UI_MEnter">5</constant>
+      <constant name="UI_MHover">6</constant>
+      <constant name="UI_MLeave">7</constant>
       <constant name="LINE">0</constant>
       <constant name="POS">1</constant>
       <constant name="LOC">2</constant>

@@ -25,16 +25,20 @@ while ( string_length(_str) != 0 )
     //find the location of the next token
     var token_pos = string_pos( _token, _str );
     
-    //if it exists
+    //if the next token exists
     if (token_pos > 0)
     {
+        // add the token if it isn't empty, or if empty tokens shouldn't be ignored
         if (token_pos != 1 || !_ignore)
             ds_list_add( list, string_copy( _str, 1, (token_pos - 1) ) );
             
+        // cut the token from the string
         _str = string_copy( _str, (token_pos + tlen), string_length(_str) );
     }
     else
     {
+        // add the last bit of text as a token
+        // and clear _str to exit the loop
         ds_list_add( list, _str );
         _str = "";
     }

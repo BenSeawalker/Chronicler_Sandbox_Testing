@@ -3,15 +3,4 @@
 var _str = argument0;
 
 
-var lines = string_tokenize(_str, chr(10), true);
-
-
-var str_height = 0;
-for(var i = 0; i < ds_list_size(lines); i++)
-    str_height += string_height(lines[|i]);
-
-
-ds_list_destroy(lines);
-
-
-return str_height;
+return (string_count( chr(10), _str ) + 1) * string_height("W");

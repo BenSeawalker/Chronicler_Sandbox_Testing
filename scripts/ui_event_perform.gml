@@ -1,4 +1,4 @@
-///ui_event_activate(event_id, objUI)
+///ui_event_perform(event_id, objUI)
 
 var _event = argument0,
     _item  = argument1;

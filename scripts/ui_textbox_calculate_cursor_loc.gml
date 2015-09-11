@@ -4,14 +4,22 @@ var _x    = real(argument0),
     _y    = real(argument1),
     _tbox = real(argument2),
 
+
+var xx = _tbox.x,
+    yy = _tbox.y;
+if(_tbox.window != noone)
+{
+    xx += _tbox.window.x;
+    yy += _tbox.window.y;
+}
     
 var _cursorPos = 0;
 
 // tokenize the lines
 var lines = string_tokenize( _tbox.text, chr(10), false );
 
-var mx   = floor( (_x - _tbox.x) ),                       // the horizontal position of the cursor in the box
-    line = floor( ((_y - _tbox.y) / string_height("W")) ) // the exact line the cursor is on
+var mx   = floor( (_x - xx) ),                       // the horizontal position of the cursor in the box
+    line = floor( ((_y - yy) / string_height("W")) ) // the exact line the cursor is on
 
 // calculate the index of the char the cursor is on 
 var cp = 0;

@@ -5,7 +5,7 @@
   <visible>-1</visible>
   <depth>0</depth>
   <persistent>0</persistent>
-  <parentName>objUI</parentName>
+  <parentName>objUIItem</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
     <event eventtype="0" enumb="0">
@@ -44,7 +44,7 @@
 ///////////////////////////////////////////////////////
 //  INHERITED
 ////
-double_click = true;
+//double_click = true;
 
 ///////////////////////////////////////////////////////
 //  DRAWING
@@ -73,8 +73,8 @@ cursor_select_end   = 0;
 //  DATA
 ////
 
-text = ""; // the actual typed text
-prev_text = text; // the text as it was in the previous frame
+text = "";//ds_list_create(); // the actual typed text
+prev_text = ""; // the text as it was in the previous frame
 </string>
           </argument>
         </arguments>
@@ -115,238 +115,16 @@ prev_text = text; // the text as it was in the previous frame
 {
     update_user_input(cursor_pos);
     text = user_input;
-}
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="7" enumb="14">
-      <action>
-        <libid>1</libid>
-        <id>604</id>
-        <kind>0</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>0</useapplyto>
-        <exetype>1</exetype>
-        <functionname>action_inherited</functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-      </action>
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>///LEFT RELEASED
-//cursor_pos = calculate_cursor_loc( mouse_x, mouse_y, id );
-
-//cursor_select_start = cursor_pos;
-
-
-if(cursor_select_end &lt; cursor_select_start)
-{
-    var temp = cursor_select_start;
     
-    cursor_select_start = cursor_select_end;
-    cursor_select_end = temp;
+    //target_width = string_width_full(text);
+    //target_height = string_height_full(text);
 }
-
-var temp = string_insert("^", text, (cursor_select_start + 1) );
-    temp = string_insert("^", temp, (cursor_select_end + 1) );
-show_debug_message("|" + temp + "|" + chr(10));
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="7" enumb="13">
-      <action>
-        <libid>1</libid>
-        <id>604</id>
-        <kind>0</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>0</useapplyto>
-        <exetype>1</exetype>
-        <functionname>action_inherited</functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-      </action>
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>///LEFT HELD
-cursor_select_end = ui_textbox_calculate_cursor_loc( mouse_x, mouse_y, id );
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="7" enumb="12">
-      <action>
-        <libid>1</libid>
-        <id>604</id>
-        <kind>0</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>0</useapplyto>
-        <exetype>1</exetype>
-        <functionname>action_inherited</functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-      </action>
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>///LEFT CLICKED
-cursor_pos = ui_textbox_calculate_cursor_loc( mouse_x, mouse_y, id );
-
-cursor_select_start = cursor_pos;
-
-
-var temp = string_insert("^", text, (cursor_select_start + 1) );
-    temp = string_insert("^", temp, (cursor_select_end + 1) );
-show_debug_message("|" + temp + "|" + chr(10));
 </string>
           </argument>
         </arguments>
       </action>
     </event>
     <event eventtype="7" enumb="10">
-      <action>
-        <libid>1</libid>
-        <id>604</id>
-        <kind>0</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>0</useapplyto>
-        <exetype>1</exetype>
-        <functionname>action_inherited</functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-      </action>
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>/// Perform UI_Event
-
-switch(ui_event)
-{
-    // ACTIVATED
-    case UI_ACTIVATE:
-        keyboard_string = "";
-        user_input = text;
-    break;
-    
-    
-    // DEACTIVATED
-    case UI_DEACTIVATE:
-        
-    break;
-    
-    
-    // LEFT CLICKED
-    case UI_LCLICK:
-        cursor_pos = ui_textbox_calculate_cursor_loc( mouse_x, mouse_y, id );
-        cursor_select_start = cursor_pos;
-    break;
-    
-    
-    // LEFT HELD
-    case UI_LHOLD:
-        cursor_select_end = ui_textbox_calculate_cursor_loc( mouse_x, mouse_y, id );
-    break;
-    
-    
-    // LEFT RELEASED
-    case UI_LRELEASE:
-        if(cursor_select_end &lt; cursor_select_start)
-        {
-            var temp = cursor_select_start;
-            
-            cursor_select_start = cursor_select_end;
-            cursor_select_end = temp;
-        }
-    break;
-}
-</string>
-          </argument>
-        </arguments>
-      </action>
-      <action>
-        <libid>1</libid>
-        <id>425</id>
-        <kind>4</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>0</useapplyto>
-        <exetype>0</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-      </action>
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -364,8 +142,101 @@ switch(ui_event)
           <argument>
             <kind>1</kind>
             <string>/// ACTIVATED
-keyboard_string = "";
-user_input = text;//string_collapse(text, chr(10));
+
+if(ui_event == UI_ACTIVATE)
+{
+    keyboard_string = "";
+    user_input = text;//string_list_collapse( text, true );
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// LEFT CLICKED
+
+if(ui_event == UI_LCLICK)
+{
+    cursor_pos = ui_textbox_calculate_cursor_loc( mouse_x, mouse_y, id );
+    cursor_select_start = cursor_pos;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// LEFT HELD
+
+if(ui_event == UI_LHOLD)
+{
+    cursor_select_end = ui_textbox_calculate_cursor_loc( mouse_x, mouse_y, id );
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// LEFT RELEASED
+
+if(ui_event == UI_LRELEASE)
+{
+    if(cursor_select_end &lt; cursor_select_start)
+    {
+        var swap = cursor_select_start;
+        
+        cursor_select_start = cursor_select_end;
+        cursor_select_end = swap;
+    }
+    
+    var temp = string_insert("^", text, (cursor_select_start + 1) );
+    temp = string_insert("^", temp, (cursor_select_end + 1) );
+    show_debug_message("|" + temp + "|" + chr(10));
+}
 </string>
           </argument>
         </arguments>
@@ -374,17 +245,26 @@ user_input = text;//string_collapse(text, chr(10));
     <event eventtype="8" enumb="0">
       <action>
         <libid>1</libid>
-        <id>604</id>
-        <kind>0</kind>
+        <id>603</id>
+        <kind>7</kind>
         <userelative>0</userelative>
         <isquestion>0</isquestion>
-        <useapplyto>0</useapplyto>
-        <exetype>1</exetype>
-        <functionname>action_inherited</functionname>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
         <codestring></codestring>
         <whoName>self</whoName>
         <relative>0</relative>
         <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///INHERITED
+if(draw_disabled)
+    exit;
+</string>
+          </argument>
+        </arguments>
       </action>
       <action>
         <libid>1</libid>
@@ -407,10 +287,10 @@ user_input = text;//string_collapse(text, chr(10));
 ///////////////////////////////////////////////////////////
 //  DEBUG
 ////
-    draw_text(10,10,"FPS: "+string(fps));
+    //draw_text(10,10,"FPS: "+string(fps));
     
     //draw border
-    draw_rectangle_colour( x, y, x+width, y+height, c_black, c_black, c_black, c_black, true);
+    draw_rectangle_colour( x, y, x+width, y+height, c_red, c_red, c_red, c_red, true);
 
 
 ///////////////////////////////////////////////////////////
@@ -424,7 +304,6 @@ user_input = text;//string_collapse(text, chr(10));
     
     if( (objUIManager.selected_item == id) || new || redraw)
     {
-        
         // make sure it draws at least once
         new = false;
         
@@ -444,16 +323,20 @@ user_input = text;//string_collapse(text, chr(10));
         ///////////////////////////////////////////////////////////
         //  TEXT
         ////
-            if( text != prev_text || redraw)
+            var text_wrapped = string_wrap( text, width, true );
+            if( text_wrapped != prev_text || redraw)
             {
-                cursor_pos += ((string_length_full(text) - string_length_full(prev_text)) * !keyboard_check(vk_delete));
-                prev_text = text;
+                var text_diff = ((string_length_full(text_wrapped) - string_length_full(prev_text)) * !keyboard_check(vk_delete));
+                prev_text = text_wrapped;
+                
+                cursor_row += text_diff;
+                show_debug_message(string(text_diff));
                 
                 text_select = false;
                 
-                surface_set_target( srf_text );
+                surface_set_target(srf_text);
                     draw_clear_alpha( c_black, 0 );
-                    draw_text( 0, 0, text );
+                    draw_text( 0, 0, text_wrapped );
                 surface_reset_target();
             }
          
@@ -464,30 +347,7 @@ user_input = text;//string_collapse(text, chr(10));
             //////////////
             //  SETUP
             ////
-                // separate text into lines
-                var lines = string_tokenize( text, chr(10), false );
-                var num_lines = (ds_list_size(lines) - 1);
-                //calculate_cursor(id);
-                    
-                // calculate the line the cursor is currently on
-                var line = string_count( chr(10), string_copy( text, 1, cursor_pos ) );
-                        
-                // the position of the cursor in the current line
-                var cp_line = cursor_pos;
-                for(var i = 0; i &lt; line; i++)
-                    cp_line -= string_length(lines[|i]) + 1;
-                
-                // make sure the cursor is on the right line...
-                //var line_length = string_length(lines[|line]) + line;
-                while(cp_line &gt; string_length(lines[|line]) + line)
-                {
-                    line = min( (line + 1), num_lines );
-                    cp_line -= string_length(lines[|line]);
-                }
-                
-                // keep cursor in bounds of string
-                cursor_pos = clamp( cursor_pos, 0, string_length_full(text));
-                
+                var lines = string_wrap_list( text, width, true );
                 
             //////////////
             //  KEYBOARD
@@ -501,96 +361,86 @@ user_input = text;//string_collapse(text, chr(10));
                 // Left
                 if(keyboard_check_pressed(vk_left))
                 {
-                    cursor_pos = max(0, cursor_pos - 1);
-                    
-                    if(text_select)
-                        text_select_start = cursor_pos;
+                    cursor_row -= 1;
                 }
                     
                 // Right
                 if(keyboard_check_pressed(vk_right))
                 {
-                    cursor_pos = min( string_length(text), (cursor_pos + 1) );
-
-                    if(text_select)
-                        text_select_end = cursor_pos;
+                    cursor_row += 1;
                 }
                     
                 // Up
                 if(keyboard_check_pressed(vk_up))
                 {
-                    if(line &gt; 0)
-                    {
-                        // the length of the line above
-                       var prev_len = string_length(lines[|line-1]);
-                        
-                        // move the cursor to the beginning of the line above and shift it to the correct position
-                        cursor_pos -= (((cp_line + 1) + prev_len) - min( prev_len, cp_line ));
-                    }
+                    cursor_line = max( 0, (cursor_line - 1) );
                 }
                 
                 // Down
                 if(keyboard_check_pressed(vk_down))
                 {
-                    if(line &lt; ds_list_size(lines) - 1)
-                    {
-                        var cur_len  = string_length(lines[|line]),   // the length of the current line
-                            next_len = string_length(lines[|line+1]); // the length of the line below
-                            
-                        // move the cursor to the beginning of the line below and shift to the correct position
-                        cursor_pos += ((cur_len - cp_line) + min( next_len, cp_line )) + 1;
-                    }
+                    cursor_line = min( (ds_list_size(lines) - 1), (cursor_line + 1) );
                 }
                 
                 // Home
                 if(keyboard_check_pressed(vk_home))
                 {
-                    cursor_pos -= (cp_line - 1);
-                    //cursor[POS] = 0;
+                    cursor_row = 0;
                 }
                 
                 // End
                 if(keyboard_check_pressed(vk_end))
                 {
-                    cursor_pos += (string_length(lines[|line]) - cp_line);
-                    //cursor[POS] = string_length(lines[|cursor[LINE]]);
+                    cursor_row = string_length(string_list_get( lines, cursor_line, "text" ));
                 }
-                
                 
             //////////////
             //  UPDATE CURSOR
             ////
+                var line_len = string_length(string_list_get( lines, cursor_line, "text" ));
+                
+                //if(cursor_line &gt; 0)
+                    line_len -= string_list_get( lines, cursor_line, "wrapped" );
+                    
+                if((cursor_row &gt;= line_len))// &amp;&amp; (line_len &gt; 0))
+                {
+                    if(cursor_line &lt; (ds_list_size(lines) - 1))
+                    {
+                        line_len += string_list_get( lines, cursor_line, "wrapped" )
+                        cursor_row -= line_len;
+                        cursor_line += 1;
+                    }
+                    else
+                        cursor_row = line_len;
+                }
+                
+                if(cursor_row &lt; 0)
+                {
+                    if(cursor_line &gt; 0)
+                    {
+                        cursor_line -= 1;
+                        cursor_row += string_length(string_list_get( lines, cursor_line, "text" ));
+                    }
+                    else if(cursor_row &lt; -1)
+                        cursor_row = -1;
+                }
+                
+                //cursor_line = clamp( cursor_line, 0, (ds_list_size(lines) - 1) );
+                cursor_row  = clamp( cursor_row, -1, (string_length(string_list_get( lines, cursor_line, "text" )) - 1) );
+                
+                cursor_pos = ui_textbox_cursor_pos( lines, cursor_line, cursor_row );
+                
                 if(cursor_pos != prev_cursor_pos)
                 {
                     // reset cursor visibility
                     cursor_blink = 0;
                     
-                    
-                    //////////////
-                    //  RECALCULATE
-                    ////
-                        // the line the cursor is currently on
-                        line = string_count( chr(10), string_copy( text, 1, cursor_pos ) );
                         
-                        // the position of the cursor in the current line
-                        cp_line = cursor_pos;
-                        for(var i = 0; i &lt; line; i++)
-                            cp_line -= string_length(lines[|i]) + 1;
+                        show_debug_message("recalculating: " + string(cursor_line) + " " + string(cursor_row) + " " + string(cursor_pos));
+                        //show_debug_message(string_replace_all(string_wrap(text, width, true), chr(10), "*"));
+                        show_debug_message(string_replace_all(string_insert("|",text_wrapped,cursor_pos+1), chr(10), "*"));
+                        //show_debug_message(string_copy( string_list_get( lines, cursor_line, "text" ), 1, cursor_row + 1));
                         
-                        // make sure the cursor is on the right line...
-                        //var line_length = string_length(lines[|line]) + line;
-                        while(cp_line &gt; string_length(lines[|line]) + line)
-                        {
-                            line = min( (line + 1), num_lines );
-                            cp_line -= string_length(lines[|line]);
-                        }
-                        
-                        // keep cursor in bounds of string
-                        cursor_pos = clamp( cursor_pos, 0, string_length_full(text));
-                        //*/
-                        
-                        show_debug_message("recalculating: " + string(line) + " " + string(cp_line) + " " + string(cursor_pos));
-                    
                     prev_cursor_pos = cursor_pos;
                 }
                 
@@ -601,8 +451,12 @@ user_input = text;//string_collapse(text, chr(10));
                 if(cursor_blink++ mod 30 &lt;= 15)
                 {
                     var str_height = string_height("W");
-                    var cx = x + string_width( string_copy( lines[|line], 1, cp_line ) );
-                    var cy = y + str_height * line;
+                    var cr = cursor_row + 1;
+                        //if(cursor_line &gt; 0)
+                        //    cr -= string_list_get( lines, (cursor_line - 1), "wrapped" );
+                    
+                    var cx = x + string_width(string_copy( string_list_get( lines, cursor_line, "text" ), 1, cr));
+                    var cy = y + str_height * cursor_line;
                     
                     draw_line( cx, cy, cx, (cy + str_height) );//+ min( str_height, (height - (cy - y)) )) );
                     
@@ -619,7 +473,7 @@ user_input = text;//string_collapse(text, chr(10));
             ds_list_destroy(lines);
     }
 
-// Draw the textbox
+
 draw_surface( srf_text, x, y );
 </string>
           </argument>

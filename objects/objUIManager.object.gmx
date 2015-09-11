@@ -37,8 +37,21 @@ if(instance_number(object_index) &gt; 1)
 ///////////////////////////////////////////////////////
 //  SELECTION
 ////
+selected_window = noone;
+prev_selected_window = selected_window;
+
 selected_item = noone;
 prev_selected_item = selected_item;
+
+
+///////////////////////////////////////////////////////
+//  HOVER
+////
+hover_window = noone;
+prev_hover_window = hover_window;
+
+hover_item = noone;
+prev_hover_item = hover_item;
 
 
 ///////////////////////////////////////////////////////
@@ -50,7 +63,31 @@ text_wrap = true;
 ///////////////////////////////////////////////////////
 //  "PRIVATE"
 ////
-time_since_lclick = current_time;
+lclick_time = current_time;
+mouse_enter_time = current_time;
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// TEST
+
+ui_scrollwindow_add(ui_create(room_width/6,room_height/6,150,200,objUIScrollWindow),ui_create(0,0,100,100,objUITextBox), 1, 1);
 </string>
           </argument>
         </arguments>
@@ -96,24 +133,163 @@ time_since_lclick = current_time;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>///UPDATE UI OBJECTS
+            <string>///UPDATE UI Windows
 
 //////////////////////////////////////////////////////////////////
 //  SELECTION
 ////
-    var lclick_time = time_since_lclick,
-        currently_selected = selected_item;
-    with(objUI)
+    var currently_selected = selected_window;
+    
+    hover_window = noone;
+    
+    with(objUIWindow)
     {
+        // SELECT
         if(mouse_check_button_pressed(mb_left))
         {
-            other.time_since_lclick = current_time;
-            
             if(point_in_rectangle( mouse_x, mouse_y, x, y, (x + width), (y + height) ))
             {
                 if(double_click &amp;&amp; !(id == currently_selected))
                 {
-                    if((current_time - lclick_time) &lt; 500)
+                    if((current_time - other.lclick_time) &lt; 500)
+                    {
+                        other.selected_window = id;
+                        break;
+                    }
+                }
+                else
+                {
+                    other.selected_window = id;
+                    break;
+                }                    
+            }
+            else
+            {
+                other.selected_window = noone;
+            }
+        }
+        
+        // HOVER
+        if(point_in_rectangle( mouse_x, mouse_y, x, y, (x + width), (y + height) ))
+            hover_window = id;
+    }
+
+
+//////////////////////////////////////////////////////////////////
+//  ACTIVATE
+////
+
+    
+    if(selected_window != prev_selected_window)
+    {
+        // deactivate previous selected item
+        ui_event_perform( UI_DEACTIVATE, prev_selected_window );
+        
+        // activate newly selected item
+        ui_event_perform( UI_ACTIVATE, selected_window );
+        
+        prev_selected_window = selected_window;
+    }
+
+    
+//////////////////////////////////////////////////////////////////
+//  MOUSE
+////
+    // MOUSE ENTER
+    if(hover_window != prev_hover_window)
+    {
+        mouse_enter_time = current_time;
+        ui_event_perform( UI_MEnter, hover_window );
+    }
+    
+    // MOUSE HOVER
+    if((current_time - mouse_enter_time) &gt;= 500)
+    {
+        ui_event_perform( UI_MHover, hover_window );
+    }
+    
+    
+    // MOUSE LEAVE
+    if(hover_window == noone &amp;&amp; prev_hover_window != noone)
+    {
+        ui_event_perform( UI_MLeave, prev_hover_window );
+    }
+
+    // HOVER UPDATE
+    prev_hover_window = hover_window;
+
+
+//////////////////////////////////////////////////////////////////
+//  LEFT MOUSE BUTTON
+////
+    // CLICK
+    if(mouse_check_button_pressed(mb_left))
+    {
+        lclick_time = current_time;
+        
+        ui_event_perform( UI_LCLICK, selected_window );
+    }
+    
+    // HOLD
+    if(mouse_check_button(mb_left) &amp;&amp; !mouse_check_button_pressed(mb_left))
+    {
+        ui_event_perform( UI_LHOLD, selected_window );
+    }
+    
+    // RELEASE
+    if(mouse_check_button_released(mb_left))
+    {
+        ui_event_perform( UI_LRELEASE, selected_window );
+    }
+
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///UPDATE UI Items
+
+//////////////////////////////////////////////////////////////////
+//  SELECTION
+////
+    var currently_selected = selected_item;
+    
+    hover_item = noone;
+    
+    with(objUIItem)
+    {
+        var xx = x,
+            yy = y;
+        if(window != noone)
+        {
+            xx = window.x + x;//(window.x - x);
+            yy = window.y + y;//(window.y - y);
+        }
+        
+        // SELECT
+        if(mouse_check_button_pressed(mb_left))
+        {
+            if(point_in_rectangle( mouse_x, mouse_y, xx, yy, (xx + width), (yy + height) ))
+            {
+                if(double_click &amp;&amp; !(id == currently_selected))
+                {
+                    if((current_time - other.lclick_time) &lt; 500)
                     {
                         other.selected_item = id;
                         break;
@@ -130,30 +306,58 @@ time_since_lclick = current_time;
                 other.selected_item = noone;
             }
         }
+        
+        // HOVER
+        if(point_in_rectangle( mouse_x, mouse_y, xx, yy, (xx + width), (yy + height) ))
+            hover_item = id;
     }
 
 
 //////////////////////////////////////////////////////////////////
 //  ACTIVATE
 ////
+
+    
     if(selected_item != prev_selected_item)
     {
-        ui_event_activate( UI_DEACTIVATE, prev_selected_item );
-        //with(prev_selected_item)
-        //    event_user(UI_DEACTIVATE);
+        // deactivate previous selected item
+        ui_event_perform( UI_DEACTIVATE, prev_selected_item );
         
-        ui_event_activate( UI_ACTIVATE, selected_item );
-        //with(selected_item)
-        //    event_user(UI_ACTIVATE);
+        show_debug_message(string(selected_item));
+        // activate newly selected item
+        ui_event_perform( UI_ACTIVATE, selected_item );
+        
             
         prev_selected_item = selected_item;
     }
 
-
-//////////////////////////////////////////////////////////////////
-//  HOVER
-////
     
+//////////////////////////////////////////////////////////////////
+//  MOUSE
+////
+    // MOUSE ENTER
+    if(hover_item != prev_hover_item)
+    {
+        mouse_enter_time = current_time;
+        ui_event_perform( UI_MEnter, hover_item );
+    }
+    
+    // MOUSE HOVER
+    if((current_time - mouse_enter_time) &gt;= 500)
+    {
+        ui_event_perform( UI_MHover, hover_item );
+    }
+    
+    
+    // MOUSE LEAVE
+    if(hover_item == noone &amp;&amp; prev_hover_item != noone)
+    {
+        ui_event_perform( UI_MLeave, prev_hover_item );
+    }
+
+    // HOVER UPDATE
+    prev_hover_item = hover_item;
+
 
 //////////////////////////////////////////////////////////////////
 //  LEFT MOUSE BUTTON
@@ -161,25 +365,21 @@ time_since_lclick = current_time;
     // CLICK
     if(mouse_check_button_pressed(mb_left))
     {
-        ui_event_activate( UI_LCLICK, selected_item );
-        //with(selected_item)
-        //    event_user(UI_LCLICK);
+        lclick_time = current_time;
+        
+        ui_event_perform( UI_LCLICK, selected_item );
     }
     
     // HOLD
     if(mouse_check_button(mb_left) &amp;&amp; !mouse_check_button_pressed(mb_left))
     {
-        ui_event_activate( UI_LHOLD, selected_item );
-        //with(selected_item)
-        //    event_user(UI_LHOLD);
+        ui_event_perform( UI_LHOLD, selected_item );
     }
     
     // RELEASE
     if(mouse_check_button_released(mb_left))
     {
-        ui_event_activate( UI_LRELEASE, selected_item );
-        //with(selected_item)
-        //    event_user(UI_LRELEASE);
+        ui_event_perform( UI_LRELEASE, selected_item );
     }
 
 

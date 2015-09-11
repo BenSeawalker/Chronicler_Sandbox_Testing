@@ -12,20 +12,37 @@
 //
 /// GMLscripts.com/license
 
-var str,token,ignore,list,tlen,temp;
-    str = argument0;
-    token = argument1;
-    ignore = argument2;
-    list = ds_list_create();
-    tlen = string_length( token);
-    while (string_length(str) != 0) {
-        temp = string_pos(token,str);
-        if (temp) {
-            if (temp != 1 || !ignore) ds_list_add(list,string_copy(str,1,temp-1));
-            str = string_copy(str,temp+tlen,string_length(str));
-        } else {
-            ds_list_add(list,str);
-            str = "";
-        }
+var _str    = argument0,
+    _token  = argument1,
+    _ignore = argument2;
+    
+
+var list = ds_list_create(),
+    tlen = string_length(_token);
+
+while ( string_length(_str) != 0 )
+{
+    //find the location of the next token
+    var token_pos = string_pos( _token, _str );
+    
+    //if the next token exists
+    if (token_pos > 0)
+    {
+        // add the token if it isn't empty, or if empty tokens shouldn't be ignored
+        if (token_pos != 1 || !_ignore)
+            ds_list_add( list, string_copy( _str, 1, (token_pos - 1) ) );
+            
+        // cut the token from the string
+        _str = string_copy( _str, (token_pos + tlen), string_length(_str) );
     }
-    return list;
+    else
+    {
+        // add the last bit of text as a token
+        // and clear _str to exit the loop
+        ds_list_add( list, _str );
+        _str = "";
+    }
+}
+
+
+return list;
