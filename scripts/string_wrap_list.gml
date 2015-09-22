@@ -16,6 +16,7 @@ var _textCurrent = string(argument[0]),
 
 var pos_space   = -1,
     pos_current =  1,
+    is_wrapped  = false,
     text_output = ds_list_create();
     
 while ( pos_current <= string_length( _textCurrent ) )
@@ -26,9 +27,11 @@ while ( pos_current <= string_length( _textCurrent ) )
         string_list_add_line( text_output, string_copy( _textCurrent, 1, (pos_current - 1) ), false );
         
         //remove the text we just looked at from the current text string
-        _textCurrent = string_copy( _textCurrent,(pos_current), (string_length(_textCurrent )) );
+        _textCurrent = string_copy( _textCurrent,(pos_current + 1), (string_length(_textCurrent )) );
+        show_debug_message(string_replace_all(_textCurrent,chr(10),"*"));
         pos_current = 1;
         pos_space = -1;
+        is_wrapped = false;
     }
     
     if ( string_width( string_copy( _textCurrent, 1, pos_current ) ) >= _width )
@@ -42,16 +45,18 @@ while ( pos_current <= string_length( _textCurrent ) )
             _textCurrent = string_copy( _textCurrent,(pos_space + 1), (string_length(_textCurrent ) - pos_space) );
             pos_current = 1;
             pos_space = -1;
+            is_wrapped = true;
         }
         else if (_split)
         {
             //if not, and we can force line breaks
-            string_list_add_line( text_output, string_copy( _textCurrent, 1, pos_current ), false );
+            string_list_add_line( text_output, string_copy( _textCurrent, 1, pos_current ), true );
             
             //remove the text we just looked at from the current text string
             _textCurrent = string_copy( _textCurrent, pos_current, (string_length( _textCurrent ) - (pos_current-1)) );
             pos_current = 1;
             pos_space = -1;
+            is_wrapped = true;
         }
     }
     

@@ -189,6 +189,8 @@ ui_scrollwindow_add(ui_create(room_width/6,room_height/6,150,200,objUIScrollWind
         ui_event_perform( UI_ACTIVATE, selected_window );
         
         prev_selected_window = selected_window;
+        
+        exit; // only perform activate/deactivate action this step
     }
 
     
@@ -329,11 +331,13 @@ ui_scrollwindow_add(ui_create(room_width/6,room_height/6,150,200,objUIScrollWind
         
             
         prev_selected_item = selected_item;
+        
+        exit; // only perform activate/deactivate function this step
     }
 
     
 //////////////////////////////////////////////////////////////////
-//  MOUSE
+//  MOUSE MOVEMENT
 ////
     // MOUSE ENTER
     if(hover_item != prev_hover_item)
@@ -360,52 +364,55 @@ ui_scrollwindow_add(ui_create(room_width/6,room_height/6,150,200,objUIScrollWind
 
 
 //////////////////////////////////////////////////////////////////
-//  LEFT MOUSE BUTTON
+//  MOUSE PRESSED
 ////
-    // CLICK
-    if(mouse_check_button_pressed(mb_left))
-    {
-        lclick_time = current_time;
+    ////////////
+    //  LEFT
+    ////
+        // LEFT CLICK
+        if(mouse_check_button_pressed(mb_left))
+        {
+            lclick_time = current_time;
+            
+            ui_event_perform( UI_LCLICK, selected_item );
+        }
         
-        ui_event_perform( UI_LCLICK, selected_item );
-    }
-    
-    // HOLD
-    if(mouse_check_button(mb_left) &amp;&amp; !mouse_check_button_pressed(mb_left))
-    {
-        ui_event_perform( UI_LHOLD, selected_item );
-    }
-    
-    // RELEASE
-    if(mouse_check_button_released(mb_left))
-    {
-        ui_event_perform( UI_LRELEASE, selected_item );
-    }
+        // LEFT HOLD
+        if(mouse_check_button(mb_left) &amp;&amp; !mouse_check_button_pressed(mb_left))
+        {
+            ui_event_perform( UI_LHOLD, selected_item );
+        }
+        
+        // LEFT RELEASE
+        if(mouse_check_button_released(mb_left))
+        {
+            ui_event_perform( UI_LRELEASE, selected_item );
+        }
+        
+        
+    ////////////
+    //  RIGHT
+    ////
+        // RIGHT CLICK
+        if(mouse_check_button_pressed(mb_right))
+        {
+            ui_event_perform( UI_RCLICK, selected_item );
+        }
+        
+        // RIGHT HOLD
+        if(mouse_check_button(mb_right) &amp;&amp; !mouse_check_button_pressed(mb_right))
+        {
+            ui_event_perform( UI_RHOLD, selected_item );
+        }
+        
+        // RIGHT RELEASE
+        if(mouse_check_button_released(mb_right))
+        {
+            ui_event_perform( UI_RRELEASE, selected_item );
+        }
 
 
 </string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="8" enumb="0">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string></string>
           </argument>
         </arguments>
       </action>

@@ -58,13 +58,12 @@ srf_text = surface_create( width, height );
 cursor_pos = 0;
 prev_cursor_pos = cursor_pos;
 
-cursor_blink = 0;
-
-cursor_line = 0;
-cursor_row = 0;
-
+cursor_blink = current_time;
+cursor_blink_time = 500; // time in milliseconds to blink the cursor on and off
 
 text_select = false;
+prev_text_select = text_select;
+
 cursor_select_start = 0;
 cursor_select_end   = 0;
 
@@ -73,8 +72,8 @@ cursor_select_end   = 0;
 //  DATA
 ////
 
-text = "";//ds_list_create(); // the actual typed text
-prev_text = ""; // the text as it was in the previous frame
+text = "";         // the actual typed text
+prev_text = text; // the text as it was in the previous frame
 </string>
           </argument>
         </arguments>
@@ -146,7 +145,7 @@ prev_text = ""; // the text as it was in the previous frame
 if(ui_event == UI_ACTIVATE)
 {
     keyboard_string = "";
-    user_input = text;//string_list_collapse( text, true );
+    user_input = text;
 }
 </string>
           </argument>
@@ -323,14 +322,18 @@ if(draw_disabled)
         ///////////////////////////////////////////////////////////
         //  TEXT
         ////
-            var text_wrapped = string_wrap( text, width, true );
-            if( text_wrapped != prev_text || redraw)
-            {
-                var text_diff = ((string_length_full(text_wrapped) - string_length_full(prev_text)) * !keyboard_check(vk_delete));
-                prev_text = text_wrapped;
+            //////////////
+            //  SETUP
+            ////
+                var text_wrapped = string_wrap( text, width, true ),
+                    lines        = string_wrap_list( text, width, true );
+                    
                 
-                cursor_row += text_diff;
-                show_debug_message(string(text_diff));
+                
+            if( text != prev_text || redraw)
+            {
+                cursor_pos += ((string_length_full(text) - string_length_full(prev_text)) * !keyboard_check(vk_delete));
+                prev_text = text;
                 
                 text_select = false;
                 
@@ -344,69 +347,104 @@ if(draw_disabled)
         ///////////////////////////////////////////////////////////
         //  CURSOR
         ////
-            //////////////
-            //  SETUP
-            ////
-                var lines = string_wrap_list( text, width, true );
-                
+            var cursor = ui_textbox_cursor_coords( lines, cursor_pos );
+        
             //////////////
             //  KEYBOARD
             ////
                 // SHIFT
-                if(keyboard_check(vk_shift))
+                if(keyboard_check_pressed(vk_shift))
                 {
+                    if(!text_select)
+                    {
+                        cursor_select_start = cursor_pos;
+                        cursor_select_end   = cursor_pos;
+                    }
+                        
                     text_select = true;
                 }
             
                 // Left
                 if(keyboard_check_pressed(vk_left))
                 {
-                    cursor_row -= 1;
+                    cursor_pos -= 1;
+                    
+                    if(!keyboard_check(vk_shift))
+                        text_select = false;
                 }
                     
                 // Right
                 if(keyboard_check_pressed(vk_right))
                 {
-                    cursor_row += 1;
+                    cursor_pos += 1;
+                    
+                    if(!keyboard_check(vk_shift))
+                        text_select = false;
                 }
                     
                 // Up
                 if(keyboard_check_pressed(vk_up))
                 {
-                    cursor_line = max( 0, (cursor_line - 1) );
+                    if(cursor[LINE] &gt; 0)
+                    {
+                        //cursor[LINE] -= 1;
+                        //cursor[ROW] = min(cursor[ROW], string_length(string_list_get( lines, (cursor[LINE]), "text" )));
+                        ///*
+                        var prev_line_len = (string_length(string_list_get( lines, (cursor[LINE] - 1), "text" )));
+                            prev_line_len += !string_list_get( lines, (cursor[LINE] - 1), "wrapped" );
+                        cursor_pos -= cursor[ROW];
+                        cursor_pos -= prev_line_len;//+ !string_list_get( lines, (cursor[LINE] - 1), "wrapped" );
+                        cursor_pos += min( cursor[ROW], prev_line_len );
+                        //*/
+                    }
                 }
                 
                 // Down
                 if(keyboard_check_pressed(vk_down))
                 {
-                    cursor_line = min( (ds_list_size(lines) - 1), (cursor_line + 1) );
+                    if(cursor[LINE] &lt; ds_list_size(lines))
+                    {
+                        //cursor[LINE] += 1;
+                        //cursor[ROW] = min(cursor[ROW], string_length(string_list_get( lines, (cursor[LINE]), "text" )));
+                        ///*
+                        var line_len      = (string_length(string_list_get( lines, cursor[LINE], "text" )));
+                            next_line_len = (string_length(string_list_get( lines, (cursor[LINE] + 1), "text" )));
+                            
+                            line_len += !string_list_get( lines, cursor[LINE], "wrapped" );
+                            next_line_len += !string_list_get( lines, (cursor[LINE] + 1), "wrapped" );
+                        
+                        cursor_pos -= cursor[ROW];
+                        cursor_pos += line_len;//+ !string_list_get( lines, cursor[LINE], "wrapped" );
+                        cursor_pos += min( cursor[ROW], next_line_len );
+                        //*/
+                    }
                 }
                 
                 // Home
                 if(keyboard_check_pressed(vk_home))
                 {
-                    cursor_row = 0;
+                    cursor_pos -= cursor[ROW];
                 }
                 
                 // End
                 if(keyboard_check_pressed(vk_end))
                 {
-                    cursor_row = string_length(string_list_get( lines, cursor_line, "text" ));
+                    cursor_pos += (string_length(string_list_get( lines, cursor[LINE], "text" )) - cursor[ROW]);
                 }
                 
             //////////////
             //  UPDATE CURSOR
             ////
-                var line_len = string_length(string_list_get( lines, cursor_line, "text" ));
+                //cursor_pos = ui_textbox_cursor_pos( lines, cursor[LINE], cursor[ROW] );
+                cursor_pos = clamp( cursor_pos, 0, string_length(text) );
+                cursor = ui_textbox_cursor_coords( lines, cursor_pos );
                 
-                //if(cursor_line &gt; 0)
-                    line_len -= string_list_get( lines, cursor_line, "wrapped" );
-                    
+                /* 
                 if((cursor_row &gt;= line_len))// &amp;&amp; (line_len &gt; 0))
                 {
                     if(cursor_line &lt; (ds_list_size(lines) - 1))
                     {
-                        line_len += string_list_get( lines, cursor_line, "wrapped" )
+                        //line_len += string_list_get( lines, cursor_line, "wrapped" )
                         cursor_row -= line_len;
                         cursor_line += 1;
                     }
@@ -429,17 +467,17 @@ if(draw_disabled)
                 cursor_row  = clamp( cursor_row, -1, (string_length(string_list_get( lines, cursor_line, "text" )) - 1) );
                 
                 cursor_pos = ui_textbox_cursor_pos( lines, cursor_line, cursor_row );
+                */
                 
                 if(cursor_pos != prev_cursor_pos)
                 {
                     // reset cursor visibility
                     cursor_blink = 0;
-                    
-                        
-                        show_debug_message("recalculating: " + string(cursor_line) + " " + string(cursor_row) + " " + string(cursor_pos));
+
+                        show_debug_message("recalculating: " + string(cursor[LINE]) + " " + string(cursor[ROW]) + " " + string(cursor_pos));
                         //show_debug_message(string_replace_all(string_wrap(text, width, true), chr(10), "*"));
+                        
                         show_debug_message(string_replace_all(string_insert("|",text_wrapped,cursor_pos+1), chr(10), "*"));
-                        //show_debug_message(string_copy( string_list_get( lines, cursor_line, "text" ), 1, cursor_row + 1));
                         
                     prev_cursor_pos = cursor_pos;
                 }
@@ -448,29 +486,25 @@ if(draw_disabled)
             //////////////
             //  DRAW CURSOR
             ////
-                if(cursor_blink++ mod 30 &lt;= 15)
+                if((current_time - cursor_blink) &gt;= (cursor_blink_time * 2))
+                    cursor_blink = current_time;
+                
+                if((current_time - cursor_blink) &lt;= cursor_blink_time)
                 {
                     var str_height = string_height("W");
-                    var cr = cursor_row + 1;
-                        //if(cursor_line &gt; 0)
-                        //    cr -= string_list_get( lines, (cursor_line - 1), "wrapped" );
+                    var cr = cursor[ROW] + 1;
                     
-                    var cx = x + string_width(string_copy( string_list_get( lines, cursor_line, "text" ), 1, cr));
-                    var cy = y + str_height * cursor_line;
+                    var cx = x + string_width(string_copy( string_list_get( lines, cursor[LINE], "text" ), 1, cr));
+                    var cy = y + str_height * cursor[LINE];
                     
-                    draw_line( cx, cy, cx, (cy + str_height) );//+ min( str_height, (height - (cy - y)) )) );
-                    
-                    if(text_select)
-                    {
-                        
-                    }
+                    draw_line( cx, cy, cx, (cy + str_height) );
                 }
             
                 
             //////////////
             //  CLEANUP
             ////
-            ds_list_destroy(lines);
+            string_list_destroy(lines);
     }
 
 

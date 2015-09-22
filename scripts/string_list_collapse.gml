@@ -10,7 +10,10 @@ for(var i = 0; i < ds_list_size(_strlst); ++i)
     
     if( i < ds_list_size(_strlst) - 1)
     {
-       if(_wrapped && string_list_get( _strlst, i, "wrapped" ))
+        if(!string_list_get( _strlst, i, "wrapped" ))
+            txt += chr(10);
+            
+        if(_wrapped && string_list_get( _strlst, i, "wrapped" ))
             txt += chr(10);
     }
 }

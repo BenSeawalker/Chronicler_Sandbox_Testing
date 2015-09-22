@@ -23,6 +23,7 @@
       <scripts name="TextBox">
         <script>scripts\ui_textbox_calculate_cursor_loc.gml</script>
         <script>scripts\ui_textbox_cursor_pos.gml</script>
+        <script>scripts\ui_textbox_cursor_coords.gml</script>
       </scripts>
       <scripts name="Drawing">
         <script>scripts\ui_draw_once.gml</script>
@@ -35,13 +36,6 @@
     </scripts>
     <scripts name="Utils">
       <scripts name="String">
-        <script>scripts\string_wrap.gml</script>
-        <script>scripts\string_wrap_new.gml</script>
-        <script>scripts\string_tokenize.gml</script>
-        <script>scripts\string_length_full.gml</script>
-        <script>scripts\string_collapse.gml</script>
-        <script>scripts\string_width_full.gml</script>
-        <script>scripts\string_height_full.gml</script>
         <scripts name="StringList">
           <script>scripts\string_wrap_list.gml</script>
           <script>scripts\string_list_add_line.gml</script>
@@ -50,6 +44,13 @@
           <script>scripts\string_list_collapse.gml</script>
           <script>scripts\string_list_destroy.gml</script>
         </scripts>
+        <script>scripts\string_wrap.gml</script>
+        <script>scripts\string_wrap_new.gml</script>
+        <script>scripts\string_tokenize.gml</script>
+        <script>scripts\string_length_full.gml</script>
+        <script>scripts\string_collapse.gml</script>
+        <script>scripts\string_width_full.gml</script>
+        <script>scripts\string_height_full.gml</script>
       </scripts>
       <scripts name="Keyboard">
         <script>scripts\keyboard_check_combo.gml</script>
@@ -70,6 +71,7 @@
       </objects>
       <objects name="Items">
         <object>objects\objUITextBox</object>
+        <object>objects\objUIScrollbar</object>
       </objects>
       <objects name="Backups">
         <object>objects\objUITextBox_backup</object>
