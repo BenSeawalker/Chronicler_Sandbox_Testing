@@ -28,7 +28,7 @@ while ( pos_current <= string_length( _textCurrent ) )
         
         //remove the text we just looked at from the current text string
         _textCurrent = string_copy( _textCurrent,(pos_current + 1), (string_length(_textCurrent )) );
-        show_debug_message(string_replace_all(_textCurrent,chr(10),"*"));
+        //show_debug_message(string_replace_all(_textCurrent,chr(10),"*"));
         pos_current = 1;
         pos_space = -1;
         is_wrapped = false;

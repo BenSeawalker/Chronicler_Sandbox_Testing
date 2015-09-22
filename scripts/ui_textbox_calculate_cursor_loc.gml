@@ -16,47 +16,54 @@ if(_tbox.window != noone)
 var _cursorPos = 0;
 
 // tokenize the lines
-var lines = string_tokenize( _tbox.text, chr(10), false );
+var lines = string_wrap_list( _tbox.text, _tbox.width, true );
 
-var mx   = floor( (_x - xx) ),                       // the horizontal position of the cursor in the box
+var mx   = round( (_x - xx) ),                       // the horizontal position of the cursor in the box
     line = floor( ((_y - yy) / string_height("W")) ) // the exact line the cursor is on
 
 // calculate the index of the char the cursor is on 
 var cp = 0;
 
-// if the cursor is beyond the end of the line
-if(line >= ds_list_size(lines) || mx > string_width(lines[|line]))
+if(line < 0)
 {
-    line = clamp( line, 0, (ds_list_size(lines) - 1) ); // clamp the line to the bounds of the list
-    cp = string_length(lines[|line]);                   // set the index to the end of the line
+    line = 0;
+    cp = 0;
+}
+
+// if the cursor is beyond the end of the line
+if(line >= ds_list_size(lines) || mx > string_width(string_list_get( lines, line, "text" )))
+{
+    line = clamp( line, 0, (ds_list_size(lines) - 1) );         // clamp the line to the bounds of the list
+    cp = string_length(string_list_get( lines, line, "text" )); // set the index to the end of the line
 }
 else
 {
     // otherwise, keep checking characters until the width is the same as the cursor pos
-    while(string_width( string_copy( lines[|line], 1, cp) ) < mx)
+    while(string_width( string_copy( string_list_get( lines, line, "text" ), 1, cp) ) < mx)
         cp++;
 }
 
-//_tbox.cursor[LINE] = line;
-//_tbox.cursor[POS]  = cp;
+//cp -= string_list_get( lines, line, "wrapped" );
+//cp -= !string_list_get( lines, line, "wrapped" );
 
-//calculate_cursor(_tbox)
-
-///*
-_cursorPos = cp;              // move the cursor to the correct position in the line
-for(var i = 0; i < line; i++) // shift the cursor down until it's on the correct line
-    _cursorPos += string_length(lines[|i]) + 1; 
-
-// account for user typed newline chars
-//_cursorPos += string_count( chr(10), string_copy( _tbox.text, 1, _cursorPos ) );
+/*
+hello
+world
+and all who inhabit it
+*/
 
 
-// clamp the cursor to the bounds of the displayed text
-_cursorPos = clamp( _cursorPos, 0, string_length_full(_tbox.text) );
-//*/
+//cp += !string_list_get( lines, line, "wrapped" );
+
+
+if(line == (ds_list_size(lines) - 1))
+    if(cp > string_length(string_list_get( lines, line, "text" )) / 2)
+        cp += 1;
+
+_cursorPos = ui_textbox_cursor_pos( lines, line, cp - 1);
 
 // cleanup
-ds_list_destroy(lines);
+string_list_destroy(lines);
 
 
 return _cursorPos;

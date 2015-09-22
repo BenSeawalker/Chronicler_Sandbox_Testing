@@ -5,7 +5,9 @@
   </Configs>
   <NewExtensions/>
   <sounds name="sound"/>
-  <sprites name="sprites"/>
+  <sprites name="sprites">
+    <sprite>sprites\sprBox</sprite>
+  </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
@@ -56,7 +58,12 @@
         <script>scripts\keyboard_check_combo.gml</script>
       </scripts>
     </scripts>
+    <script>scripts\script25.gml</script>
+    <script>scripts\draw_roundrect_grad.gml</script>
   </scripts>
+  <shaders name="shaders">
+    <shader type="GLSLES">shaders\sdrColorize.shader</shader>
+  </shaders>
   <fonts name="fonts">
     <font>fonts\fnt_example</font>
   </fonts>
