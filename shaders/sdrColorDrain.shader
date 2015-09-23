@@ -9,14 +9,15 @@ attribute vec2 in_TextureCoord;              // (u,v)
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec3 f_Saturation;
-uniform vec3 f_ToColour;
+uniform float f_Saturation;
+uniform vec3  f_ColorToMatch;
+uniform float f_Vary;
 
 //uniform float f_Offset;
 
 void main()
 {
-    vec4 object_space_pos = vec4( in_Position.x, in_Position.y, in_Position.z, 1.0);//vec4( in_Position.x + cos(f_Offset)*10.0, in_Position.y + sin(f_Offset)*10.0, in_Position.z, 1.0);
+    vec4 object_space_pos = vec4( in_Position.x, in_Position.y, in_Position.z, 1.0);
     gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * object_space_pos;
     
     v_vColour = in_Colour;
@@ -29,13 +30,23 @@ void main()
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec3 f_Saturation;
-uniform vec3 f_ToColour;
+uniform float f_Saturation;
+uniform vec3  f_ColorToMatch;
+uniform float f_Vary;
 
 void main()
 {
     vec4 Color = texture2D(gm_BaseTexture, v_vTexcoord);
-    float bw = dot(Color.rgb, f_Saturation); // black and white
-    gl_FragColor = vec4(bw * f_ToColour , Color.a);
+    
+    float RDiff = abs(Color.r - f_ColorToMatch.r),
+          GDiff = abs(Color.g - f_ColorToMatch.g),
+          BDiff = abs(Color.b - f_ColorToMatch.b);
+          
+    float Result = float((RDiff <= f_Vary) && (GDiff <= f_Vary) && (BDiff <= f_Vary));
+    
+    vec3 bw1 = (Color.rgb * (Result)),                                           // color
+         bw2 = vec3(dot(Color.rgb, vec3(0.299, 0.587, 0.114)) * (1.0 - Result)); // black and white
+    
+    gl_FragColor = v_vColour * vec4(mix(Color.rgb, bw1 + bw2, 1.0),Color.a);
 }
 

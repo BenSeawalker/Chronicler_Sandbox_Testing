@@ -114,11 +114,14 @@ text_wrapped = string_wrap( text, width, true );
             <kind>1</kind>
             <string>if(objUIManager.selected_item == id)
 {
-    update_user_input(cursor_pos);
+    if(text_select &amp;&amp; !mouse_check_button(mb_left))
+    {
+        update_user_input(cursor_pos, cursor_select_start, cursor_select_end );
+    }
+    else
+        update_user_input(cursor_pos);
+        
     text = user_input;
-    
-    //target_width = string_width_full(text);
-    //target_height = string_height_full(text);
 }
 </string>
           </argument>
@@ -175,6 +178,8 @@ if(ui_event == UI_LCLICK)
 {
     cursor_pos = ui_textbox_calculate_cursor_loc( mouse_x, mouse_y, id );
     cursor_select_start = cursor_pos;
+    
+    text_select = false;
 }
 </string>
           </argument>
@@ -201,6 +206,7 @@ if(ui_event == UI_LCLICK)
 if(ui_event == UI_LHOLD)
 {
     cursor_select_end = ui_textbox_calculate_cursor_loc( mouse_x, mouse_y, id );
+    text_select = true;
 }
 </string>
           </argument>
@@ -234,9 +240,9 @@ if(ui_event == UI_LRELEASE)
         cursor_select_end = swap;
     }
     
-    var temp = string_insert("^", text, (cursor_select_start + 1) );
-    temp = string_insert("^", temp, (cursor_select_end + 1) );
-    show_debug_message("|" + temp + "|" + chr(10));
+    //var temp = string_insert("^", text, (cursor_select_start + 1) );
+    //temp = string_insert("^", temp, (cursor_select_end + 1) );
+    //show_debug_message("|" + temp + "|" + chr(10));
 }
 </string>
           </argument>
@@ -325,10 +331,15 @@ if(draw_disabled)
         ///////////////////////////////////////////////////////////
         //  TEXT
         ////
+            if(abs(cursor_select_start - cursor_select_end) &lt;= 1)
+                text_select = false;
                 
             if( text != prev_text || redraw)
             {
-                cursor_pos += ((string_length_full(text) - string_length_full(prev_text)) * !keyboard_check(vk_delete));
+                if(!text_select)
+                    cursor_pos += ((string_length_full(text) - string_length_full(prev_text)) * !keyboard_check(vk_delete));
+                else
+                    cursor_pos += global.keyboard_string_length;
                 prev_text = text;
                 
                 text_wrapped = string_wrap( text, width, true );
@@ -462,6 +473,46 @@ if(draw_disabled)
                     var cy = y + str_height * cursor[LINE];
                     
                     draw_line( cx, cy, cx, (cy + str_height) );
+                }
+                
+                if(text_select)
+                {
+                    var cs = cursor_select_start,
+                        ce = cursor_select_end;
+                    if(ce &lt; cs)
+                    {
+                        var swap = cs;
+                        cs = ce;
+                        ce = swap;
+                    }
+                    
+                    var sp = ui_textbox_cursor_coords( lines, cs ),
+                        ep = ui_textbox_cursor_coords( lines, ce ),
+                        sh = string_height("W"),
+                        t1 = string_list_get( lines, sp[LINE], "text" ),
+                        t2 = string_list_get( lines, ep[LINE], "text" );
+                        
+                        var x1 = x + string_width(string_copy( t1, 1, sp[ROW] + 1)),
+                            x2 = x + string_width(string_copy( t2, 1, ep[ROW] + 1)),
+                            y1 = y + sh * sp[LINE];
+                            y2 = y + sh * ep[LINE];
+                        
+                        if(sp[LINE] == ep[LINE])
+                        {
+                            draw_rectangle_colour( x1, y1, x2, (y1 + sh), c_blue, c_blue, c_blue, c_blue, false );
+                        }
+                        else
+                        {
+                            draw_rectangle_colour( x1, y1, x + string_width(t1), (y1 + sh), c_blue, c_blue, c_blue, c_blue, false );
+                            
+                            for(var i = 1; i &lt; (ep[LINE] - sp[LINE]); ++i)
+                            {
+                                var yy = (y1 + (i * sh));
+                                draw_rectangle_colour( x, yy, x + string_width(string_list_get( lines, (sp[LINE] + i), "text" )), (yy + sh), c_blue, c_blue, c_blue, c_blue, false );
+                            }
+                            
+                            draw_rectangle_colour( x, y2, x2, (y2 + sh), c_blue, c_blue, c_blue, c_blue, false );
+                        }
                 }
             
                 

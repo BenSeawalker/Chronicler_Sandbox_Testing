@@ -457,7 +457,7 @@
     <option_xbone_title_id></option_xbone_title_id>
   </Options>
   <ConfigConstants>
-    <constants number="13">
+    <constants number="19">
       <constant name="UI_ACTIVATE">0</constant>
       <constant name="UI_DEACTIVATE">1</constant>
       <constant name="UI_LCLICK">2</constant>
@@ -471,6 +471,12 @@
       <constant name="UI_MLeave">10</constant>
       <constant name="LINE">0</constant>
       <constant name="ROW">1</constant>
+      <constant name="h">0</constant>
+      <constant name="s">1</constant>
+      <constant name="v">2</constant>
+      <constant name="r">0</constant>
+      <constant name="g">1</constant>
+      <constant name="b">2</constant>
     </constants>
   </ConfigConstants>
 </Config>
