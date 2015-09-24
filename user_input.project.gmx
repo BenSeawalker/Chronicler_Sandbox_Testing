@@ -58,6 +58,8 @@
       </scripts>
       <scripts name="Keyboard">
         <script>scripts\keyboard_check_combo.gml</script>
+        <script>scripts\keyboard_check_chars_old.gml</script>
+        <script>scripts\keyboard_check_chars.gml</script>
       </scripts>
       <scripts name="Colour">
         <script>scripts\color_normalize.gml</script>

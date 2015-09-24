@@ -17,11 +17,11 @@ if(argument_count > 2)
         _cursorEnd = swap;
     }
     
+    text_mid = string_copy( user_input, _cursorStart+1, (_cursorEnd - _cursorStart) );
+    
     //show_debug_message(string_insert( "|", string_insert( "|", user_input, _cursorStart + 1), _cursorEnd + 2 ));
     if(abs(_cursorStart - _cursorEnd) >= 1)
     {
-        text_mid = string_copy( user_input, _cursorStart+1, (_cursorEnd - _cursorStart) );
-            show_debug_message(text_mid);
         after_cursor = string_copy( user_input, (_cursorEnd + 1), string_length(user_input) );
         user_input = string_copy( user_input, 1, _cursorStart );
     }
@@ -58,7 +58,7 @@ keyboard_string = ""; // reset for the next set of input
 if( keyboard_check_pressed(vk_backspace) ||  keyboard_check_pressed(vk_delete) )
     global.ui_backspace_held = current_time;
 
-if(argument_count == 1)
+if(argument_count <= 1)
 {
     if (keyboard_check(vk_backspace))
     {
@@ -104,15 +104,41 @@ if( keyboard_check_pressed(vk_tab) )
 ////
 //Paste with CTRL+V.
 if (keyboard_check_combo( vk_control, ord('V') ) )
-    user_input += string_replace_all(clipboard_get_text(),'#','\#'); // make hashtags visible
-
-
-if(argument_count > 2 && !keyboard_check(vk_anykey))
 {
-    user_input += text_mid;
+    var clipboard_text = string_replace_all(clipboard_get_text(),'#','\#');
+    user_input += clipboard_text; // make hashtags visible
+    
+    global.keyboard_string_length += string_length_full(clipboard_text);
+}
+
+
+if(argument_count > 2)
+{
+    /////////////////////////////////////////////////////
+    //  COPY
+    ////
+    //Copy with CTRL+C.
+    if (keyboard_check_combo( vk_control, ord('C') ) )
+    {
+        clipboard_set_text(string_replace_all( text_mid, "\#", "#" ));
+    }
+}
+
+if(argument_count > 2)
+{
+    if(keyboard_check_combo( vk_control, ord('C') ) || !keyboard_check_chars(true))
+    {
+        user_input += text_mid;
+    }
+    else
+    {
+        global.keyboard_string_length += (_cursorStart - _cursorPos);
+    }
 }
 
 ///////////////////////////////////////////////////
 //  FINISH
 ////
 user_input += after_cursor;
+
+//keyboard_clear(keyboard_key);
