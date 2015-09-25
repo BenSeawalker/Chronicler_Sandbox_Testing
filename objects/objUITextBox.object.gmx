@@ -172,14 +172,15 @@ if(ui_event == UI_ACTIVATE)
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// LEFT CLICKED
+            <string>/// LEFT CLICKED or ACTIVATED
 
-if(ui_event == UI_LCLICK)
+if(ui_event == UI_LCLICK || ui_event == UI_ACTIVATE)
 {
     cursor_pos = ui_textbox_calculate_cursor_loc( mouse_x, mouse_y, id );
-    cursor_select_start = cursor_pos;
     
     text_select = false;
+    cursor_select_start = cursor_pos;
+    cursor_select_end   = cursor_pos;
 }
 </string>
           </argument>
@@ -384,6 +385,8 @@ if(draw_disabled)
                     
                     if(!keyboard_check(vk_shift))
                         text_select = false;
+                    else
+                        cursor_select_start = cursor_pos;
                 }
                     
                 // RIGHT
@@ -393,6 +396,8 @@ if(draw_disabled)
                     
                     if(!keyboard_check(vk_shift))
                         text_select = false;
+                    else
+                        cursor_select_end = cursor_pos;
                 }
                     
                 // UP
@@ -400,15 +405,11 @@ if(draw_disabled)
                 {
                     if(cursor[LINE] &gt; 0)
                     {
-                        //cursor[LINE] -= 1;
-                        //cursor[ROW] = min(cursor[ROW], string_length(string_list_get( lines, (cursor[LINE]), "text" )));
-                        ///*
                         var prev_line_len = (string_length(string_list_get( lines, (cursor[LINE] - 1), "text" )));
                             prev_line_len += !string_list_get( lines, (cursor[LINE] - 1), "wrapped" );
                         cursor_pos -= cursor[ROW];
-                        cursor_pos -= prev_line_len;//+ !string_list_get( lines, (cursor[LINE] - 1), "wrapped" );
+                        cursor_pos -= prev_line_len;
                         cursor_pos += min( cursor[ROW], prev_line_len );
-                        //*/
                     }
                 }
                 
